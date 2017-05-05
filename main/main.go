@@ -9,6 +9,7 @@ package main
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/un.h>
 #include <sys/uio.h>
 
 #define ANCIL_FD_BUFFER(n) \
@@ -52,14 +53,48 @@ ancil_send_fd(int sock, int fd)
     return(ancil_send_fds_with_buffer(sock, &fd, 1, &buffer));
 }
 
-void
-set_timeout(int sock)
+int
+protect_socket(int fd)
 {
+    int sock;
+    struct sockaddr_un addr;
+
+    if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
+        return -1;
+    }
+
+    // Set timeout to 1s
     struct timeval tv;
     tv.tv_sec  = 1;
     tv.tv_usec = 0;
     setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval));
     setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&tv, sizeof(struct timeval));
+
+	const char *path = "protect_path";
+
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
+
+    if (connect(sock, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
+        close(sock);
+        return -1;
+    }
+
+    if (ancil_send_fd(sock, fd)) {
+        close(sock);
+        return -1;
+    }
+
+    char ret = 0;
+
+    if (recv(sock, &ret, 1, 0) == -1) {
+        close(sock);
+        return -1;
+    }
+
+    close(sock);
+    return ret;
 }
 
 */
@@ -98,43 +133,16 @@ func main() {
 	log_init()
 
 	if vpn {
-		path := "protect_path"
-
 		callback := func(fd int, sotype int) {
-
 			if sotype == syscall.SOCK_STREAM {
 				return
 			}
-
-			socket, err := syscall.Socket(syscall.AF_UNIX, syscall.SOCK_STREAM, 0)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-			defer syscall.Close(socket)
-
-			C.set_timeout(C.int(socket))
-
-			err = syscall.Connect(socket, &syscall.SockaddrUnix{Name: path})
-			if err != nil {
-				log.Println(err)
-				return
-			}
-
-			C.ancil_send_fd(C.int(socket), C.int(fd))
-
-			dummy := []byte{1}
-			n, err := syscall.Read(socket, dummy)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-			if n != 1 {
+			ret := C.protect_socket(C.int(fd))
+			if ret != 0 {
 				log.Println("Failed to protect fd: ", fd)
 				return
 			}
 		}
-
 		SetNetCallback(callback)
 	}
 
