@@ -102,6 +102,8 @@ import "C"
 
 import (
 	"flag"
+	"io"
+	"os"
 	"runtime"
 	"syscall"
 
@@ -113,13 +115,15 @@ func main() {
 
 	var (
 		configPath      string
-		logVerbose      bool
+		logPath         string
+		isLogVerbose    bool
 		processorNumber int
 		vpn             bool
 	)
 
 	flag.StringVar(&configPath, "c", "./config.json", "config file path")
-	flag.BoolVar(&logVerbose, "v", false, "verbose mode")
+	flag.StringVar(&logPath, "l", "./overture.log", "log file path")
+	flag.BoolVar(&isLogVerbose, "v", false, "verbose mode")
 	flag.IntVar(&processorNumber, "p", runtime.NumCPU(), "number of processor to use")
 	flag.BoolVar(&vpn, "V", false, "VPN mode")
 	flag.Parse()
@@ -146,7 +150,8 @@ func main() {
 		SetNetCallback(callback)
 	}
 
-	log.Info("If you need any help or want to check update, please visit the project repository: https://github.com/holyshawn/overture")
+	log.Info("Overture " + version)
+	log.Info("If you need any help, please visit the project repository: https://github.com/shawn1m/overture")
 
 	runtime.GOMAXPROCS(processorNumber)
 
