@@ -8,9 +8,9 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/miekg/dns"
-	"github.com/shawn1m/overture/core/cache"
-	"github.com/shawn1m/overture/core/hosts"
-	"github.com/shawn1m/overture/core/outbound"
+	"github.com/shadowsocks/overture/core/cache"
+	"github.com/shadowsocks/overture/core/hosts"
+	"github.com/shadowsocks/overture/core/outbound"
 )
 
 type Server struct {
@@ -35,7 +35,7 @@ func (s *Server) Run() {
 
 	log.Info("Start overture on " + s.BindAddress)
 
-	for _, p := range [2]string{"tcp", "udp"} {
+	for _, p := range [2]string{"tcp4", "udp4"} {
 		go func(p string) {
 			err := dns.ListenAndServe(s.BindAddress, p, mux)
 			if err != nil {

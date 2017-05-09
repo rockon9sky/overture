@@ -6,7 +6,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/miekg/dns"
-	"github.com/shawn1m/overture/core/common"
+	"github.com/shadowsocks/overture/core/common"
 )
 
 type Dispatcher struct {

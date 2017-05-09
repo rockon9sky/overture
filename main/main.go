@@ -102,13 +102,11 @@ import "C"
 
 import (
 	"flag"
-	"io"
-	"os"
 	"runtime"
 	"syscall"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/shawn1m/overture/core"
+	"github.com/shadowsocks/overture/core"
 )
 
 func main() {
@@ -128,7 +126,7 @@ func main() {
 	flag.BoolVar(&vpn, "V", false, "VPN mode")
 	flag.Parse()
 
-	if logVerbose {
+	if isLogVerbose {
 		log.SetLevel(log.DebugLevel)
 	} else {
 		log.SetLevel(log.InfoLevel)
@@ -150,8 +148,7 @@ func main() {
 		SetNetCallback(callback)
 	}
 
-	log.Info("Overture " + version)
-	log.Info("If you need any help, please visit the project repository: https://github.com/shawn1m/overture")
+	log.Info("If you need any help, please visit the project repository: https://github.com/shadowsocks/overture")
 
 	runtime.GOMAXPROCS(processorNumber)
 

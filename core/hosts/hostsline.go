@@ -10,7 +10,7 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/shawn1m/overture/core/common"
+	"github.com/shadowsocks/overture/core/common"
 )
 
 type hostsLine struct {

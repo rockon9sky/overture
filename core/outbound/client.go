@@ -8,9 +8,9 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/miekg/dns"
-	"github.com/shawn1m/overture/core/cache"
-	"github.com/shawn1m/overture/core/common"
-	"github.com/shawn1m/overture/core/hosts"
+	"github.com/shadowsocks/overture/core/cache"
+	"github.com/shadowsocks/overture/core/common"
+	"github.com/shadowsocks/overture/core/hosts"
 	"golang.org/x/net/proxy"
 )
 
