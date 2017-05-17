@@ -11,6 +11,7 @@ package main
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/uio.h>
+#include <unistd.h>
 
 #define ANCIL_FD_BUFFER(n) \
     struct { \
