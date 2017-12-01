@@ -16,9 +16,9 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/shadowsocks/overture/core/cache"
-	"github.com/shadowsocks/overture/core/hosts"
-	"github.com/shadowsocks/overture/core/outbound"
+	"github.com/rockon9sky/overture/core/cache"
+	"github.com/rockon9sky/overture/core/hosts"
+	"github.com/rockon9sky/overture/core/outbound"
 )
 
 type Config struct {

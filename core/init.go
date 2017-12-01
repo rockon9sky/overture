@@ -6,8 +6,8 @@
 package core
 
 import (
-	"github.com/shadowsocks/overture/core/inbound"
-	"github.com/shadowsocks/overture/core/outbound"
+	"github.com/rockon9sky/overture/core/inbound"
+	"github.com/rockon9sky/overture/core/outbound"
 )
 
 // Initiate the server with config file
